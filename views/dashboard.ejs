@@ -12,6 +12,10 @@
 </head>
 <body>
     <h1 class="h1 text-center">Dashboard</h1>
-    <p>Welcome <span class="email-span"></span>!</p>
+    <p>Welcome <span class="email-span"><%= user.email %></span>!</p>
+    <div class="container">
+        <a href="/dashboard/logout" class="btn btn-outline-danger">Log out</a>
+        <a href="/dashboard/delete_account" class="btn btn-danger text-white">Delete account</a>
+    </div>
 </body>
 </html>
