@@ -20,6 +20,7 @@ router.get("/logout", (req, res) => {
 router.get("/delete_account", auth, async (req, res) => {
     const { email } = req.user;
     await User.deleteOne({ email });
+    res.cookie("logged", {}, { maxAge: 0 });
     res.redirect("/");
 });
 

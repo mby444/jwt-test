@@ -1,5 +1,6 @@
 import { Router } from "express";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 import { User } from "../database/model.js";
 
 const router = Router();
@@ -31,7 +32,8 @@ router.post("/signup", async (req, res) => {
     const { email, password } = req.body;
     const oldUser = await User.findOne({ email });
     if (oldUser) return res.render("sign-form", { error: "User already exists!", type: "signup" });
-    await new User({ email, password }).save();
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await new User({ email, password: hashedPassword }).save();
 
     res.redirect("/login");
 });
@@ -48,7 +50,9 @@ router.post("/login", async (req, res) => {
         options.error = "You have not signed yet!";
         return res.render("sign-form", options);
     }
-    if (password !== oldUser.password) {
+    const isPassword = await bcrypt.compare(password, oldUser.password);
+    
+    if (!isPassword) {
         options.error = "Incorrect password!";
         return res.render("sign-form", options);
     }
